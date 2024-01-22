@@ -1,0 +1,5 @@
+# ignore bin directory
+bin
+
+# ignore actual .env files
+*.env
