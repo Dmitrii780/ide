@@ -1,0 +1,16 @@
+.main-content {
+  display: flex;
+  height: 90vh;
+  margin: 0;
+}
+
+.code-editor-container,
+.terminal-container {
+  flex: 1;
+  overflow: hidden;
+}
+
+.resizable {
+  background: #fff;
+  overflow: hidden;
+}
