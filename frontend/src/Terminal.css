@@ -1,0 +1,22 @@
+.terminal {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  font-family: monospace;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.terminal-header {
+  background-color: #333;
+  padding: 5px;
+}
+
+.terminal-body {
+  white-space: pre;
+}
+
+.terminal-line {
+  margin: 0;
+}
