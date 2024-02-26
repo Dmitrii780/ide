@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import "./LanguageSelector.css";
+import { useCode } from "./CodeContext";
 
 function LanguageSelector() {
-  const [languages, setLanguages] = useState([]);
-  const [selectedLanguage, setSelectedLanguage] = useState("");
+  const { language, setLanguage, setLanguages } = useCode();
 
   useEffect(() => {
     fetch("http://193.123.62.94:4535/languages/list")
@@ -15,25 +15,25 @@ function LanguageSelector() {
       })
       .then((data) => {
         setLanguages(data);
-        if (data.length > 0) {
-          setSelectedLanguage(data[0].name);
+        if (data.length > 0 && !language) {
+          setLanguage(data[0].name);
         }
       })
       .catch((error) => {
         console.error("Error fetching languages:", error);
       });
-  }, []);
+  }, [language, setLanguage, setLanguages]);
 
   const handleChange = (event) => {
-    setSelectedLanguage(event.target.value);
+    setLanguage(event.target.value);
   };
 
   return (
     <div className="language-selector">
-      <select value={selectedLanguage} onChange={handleChange}>
-        {languages.map((language) => (
-          <option key={language.name} value={language.name}>
-            {language.name}
+      <select value={language} onChange={handleChange}>
+        {useCode().languages.map((lang) => (
+          <option key={lang.name} value={lang.name}>
+            {lang.name}
           </option>
         ))}
       </select>

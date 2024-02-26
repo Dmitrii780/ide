@@ -1,15 +1,21 @@
+// В Terminal.js
 import React from "react";
 import "./Terminal.css";
-function Terminal({ output }) {
+import { useCode } from "./CodeContext";
+
+function Terminal() {
+  const { output } = useCode();
+
   return (
     <div className="terminal">
-      <div className="terminal-header">Terminal</div>
+      <div className="terminal-header">Терминал</div>
       <div className="terminal-body">
-        {output.map((line, index) => (
-          <div key={index} className="terminal-line">
-            {line}
-          </div>
-        ))}
+        {output &&
+          output.map((line, index) => (
+            <div key={index} className="terminal-line">
+              {line}
+            </div>
+          ))}
       </div>
     </div>
   );

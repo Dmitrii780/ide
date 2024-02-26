@@ -1,26 +1,66 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import Toolbar from "./Toolbar.js";
 import CodeEditor from "./CodeEditor.js";
 import Terminal from "./Terminal.js";
+import SignUp from "./SignUp.js";
 import "./App.css";
+import { AuthProvider, AuthContext } from "./Auth.js";
+import { CodeProvider } from "./CodeContext";
 
 function App() {
-  const [terminalOutput] = useState(["Hello!"]);
-
   return (
-    <div className="App">
-      <Toolbar />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/signup" element={<SignUp />} />
+          <Route
+            path="/ide"
+            element={
+              <ProtectedRoute>
+                <CodeProvider>
+                  <IDEComponent />
+                </CodeProvider>
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<Navigate replace to="/signup" />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
+  );
+}
 
-      <div className="main-content">
-        <div className="code-editor-container">
-          <CodeEditor />
-        </div>
+function ProtectedRoute({ children }) {
+  const { currentUser } = useContext(AuthContext);
 
-        <div className="terminal-container">
-          <Terminal output={terminalOutput} />
+  if (!currentUser) {
+    return <Navigate to="/signup" />;
+  }
+
+  return children;
+}
+
+function IDEComponent() {
+  return (
+    <CodeProvider>
+      <div className="App">
+        <Toolbar />
+        <div className="main-content">
+          <div className="code-editor-container">
+            <CodeEditor />
+          </div>
+          <div className="terminal-container">
+            <Terminal />
+          </div>
         </div>
       </div>
-    </div>
+    </CodeProvider>
   );
 }
 
