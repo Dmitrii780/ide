@@ -1,21 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import "./LanguageSelector.css";
+import { useCode } from "./CodeContext";
 
 function LanguageSelector() {
-  const [selectedLanguage, setSelectedLanguage] = useState("JavaScript");
+  const { language, setLanguage, languages, setLanguages } = useCode(); // Добавлен setLanguages
+
+  useEffect(() => {
+    if (languages.length === 0) {
+      fetch("http://193.123.62.94:4535/languages/list")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setLanguages(data); // Исправлено на setLanguages
+          if (!language && data.length > 0) {
+            setLanguage(data[0].name); // Устанавливаем первый язык из списка
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching languages:", error);
+        });
+    }
+  }, [language, setLanguage, languages, setLanguages]); // Убран дубликат setLanguage
 
   const handleChange = (event) => {
-    setSelectedLanguage(event.target.value);
+    setLanguage(event.target.value);
   };
 
   return (
     <div className="language-selector">
-      <select value={selectedLanguage} onChange={handleChange}>
-        <option value="JavaScript">JavaScript</option>
-        <option value="Python">Python</option>
-        <option value="C++">C++</option>
-        <option value="C">C</option>
-        <option value="GoLang">GoLang</option>
+      <select value={language || ""} onChange={handleChange}>
+        {languages.map((lang) => (
+          <option key={lang.name} value={lang.name}>
+            {lang.name}
+          </option>
+        ))}
       </select>
     </div>
   );
