@@ -1,15 +1,29 @@
 import React from "react";
 import "./Toolbar.css";
 import LanguageSelector from "./LanguageSelector";
+import RunButton from "./RunButton";
+import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "./FirebaseConfig";
 
-function Toolbar({ onNewFile, onSave, onRun }) {
+function Toolbar({ onNewFile, onSave }) {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate("/signup");
+    } catch (error) {
+      console.error("Logout error: ", error);
+    }
+  };
+
   return (
     <div className="toolbar">
-      <button onClick={onNewFile}>New File</button>
       <button onClick={onSave}>Save</button>
-      <button onClick={onRun}>Run</button>
+      <RunButton />
       <LanguageSelector />
-      {/*дополнительные кнопки и элементы управления по мере необходимости */}
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 }

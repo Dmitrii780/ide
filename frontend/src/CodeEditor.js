@@ -1,22 +1,36 @@
-import React, { useState } from "react";
+import React from "react";
+import { useCode } from "./CodeContext";
 import AceEditor from "react-ace";
-
-// Импорт необходимых тем и режимов для языков
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/mode-python";
-import "ace-builds/src-noconflict/mode-java";
+import "ace-builds/src-noconflict/mode-golang";
 import "ace-builds/src-noconflict/theme-monokai";
 
 function CodeEditor() {
-  const [code, setCode] = useState("");
+  const { code, setCode, language } = useCode();
 
   const handleChange = (newCode) => {
     setCode(newCode);
   };
 
+  let mode;
+  switch (language) {
+    case "JavaScript":
+      mode = "javascript";
+      break;
+    case "Python":
+      mode = "python";
+      break;
+    case "Golang":
+      mode = "golang";
+      break;
+    default:
+      mode = "javascript";
+  }
+
   return (
     <AceEditor
-      mode="javascript"
+      mode={mode}
       theme="monokai"
       value={code}
       onChange={handleChange}
